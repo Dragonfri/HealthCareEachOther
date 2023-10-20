@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import {React, useState } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -17,6 +17,30 @@ import {
 } from 'react-native';
 
 export default function LoginPage({navigation}) {
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+
+  const loginAuth = () => {
+    // ip address hiding
+    fetch("ip/api/login", {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 'memberId': id, 'password': password }),
+      }).then((response) => response.json())
+        .then((data) => {
+            if (data.access_token) {
+                navigation.navigate('Main');
+            } else {
+                alert('로그인 정보가 없습니다.');
+            }
+        })
+        .catch((error) => {
+            console.error("로그인 요청 중 오류 발생:", error);
+        });
+  };
+
   return (
     <View style={styles.TopContainer}>
       <View style={styles.LoginPwContainer}>
@@ -25,12 +49,16 @@ export default function LoginPage({navigation}) {
           style={styles.LoginInput}
           placeholder="이메일 입력"
           placeholderTextColor="gray"
+          value={id}
+          onChangeText={setId}
         />
         <Text style={styles.PwText}>비밀번호</Text>
         <TextInput
           style={styles.PwInput}
           placeholder="비밀번호 입력"
           placeholderTextColor="gray"
+          value={id}
+          onChange={setPassword}
         />
         <View style={styles.BtnContainer}>
           <TouchableOpacity>
@@ -45,7 +73,7 @@ export default function LoginPage({navigation}) {
         </View>
       </View>
       <View style={styles.SignInBtn}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={loginAuth}>
           <Text style={styles.SignInBtnText}>로그인</Text>
         </TouchableOpacity>
       </View>

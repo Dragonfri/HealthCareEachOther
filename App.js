@@ -9,6 +9,7 @@
 import React from 'react';
 import StartPage from "./component/loginComponent/startPage";
 import RegisterPage from './component/loginComponent/registerPage';
+import Main from './component/main/main';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -33,6 +34,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 
+
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -42,6 +44,7 @@ function App() {
         <Stack.Screen name="Start" component={StartPage} />
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="Login" component={LoginPage} />
+        <Stack.Screen name="Main" component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
   );
