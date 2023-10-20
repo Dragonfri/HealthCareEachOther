@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -17,6 +17,37 @@ import {
 } from 'react-native';
 
 export default function RegisterPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [nickname, setNickname] = useState('');
+
+  const signUpAuth = () => {
+    fetch('ip:8080/api/mvp/member/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        memberId: email,
+        memberName: nickname,
+        password: password,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // 회원가입 성공
+          alert('회원가입에 성공했습니다.');
+        } else {
+          // 회원가입 실패
+          alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+        }
+      })
+      .catch(error => {
+        console.error('회원가입 요청 중 오류 발생:', error);
+      });
+  };
+
   return (
     <View style={styles.TopContainer}>
       <View style={styles.LoginPwContainer}>
@@ -25,12 +56,16 @@ export default function RegisterPage() {
           style={styles.LoginInput}
           placeholder="이메일 입력"
           placeholderTextColor="gray"
+          value={email}
+          onChangeText={setEmail}
         />
         <Text style={styles.PwText}>비밀번호</Text>
         <TextInput
           style={styles.PwInput}
           placeholder="비밀번호 입력"
           placeholderTextColor="gray"
+          value={password}
+          onChangeText={setPassword}
         />
 
         <Text style={styles.PwText}>닉네임</Text>
@@ -38,10 +73,12 @@ export default function RegisterPage() {
           style={styles.PwInput}
           placeholder="닉네임 입력"
           placeholderTextColor="gray"
+          value={nickname}
+          onChangeText={setNickname}
         />
       </View>
       <View style={styles.SignInBtn}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={signUpAuth}>
           <Text style={styles.SignInBtnText}>회원가입</Text>
         </TouchableOpacity>
       </View>
