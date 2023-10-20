@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   SignInBtn: {
-    marginTop: '60%',
+    marginTop: '80%',
     width: '85%',
     height: '7%',
     borderRadius: 15,

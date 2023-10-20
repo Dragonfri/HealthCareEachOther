@@ -32,6 +32,13 @@ export default function RegisterPage() {
           placeholder="비밀번호 입력"
           placeholderTextColor="gray"
         />
+
+        <Text style={styles.PwText}>닉네임</Text>
+        <TextInput
+          style={styles.PwInput}
+          placeholder="닉네임 입력"
+          placeholderTextColor="gray"
+        />
       </View>
       <View style={styles.SignInBtn}>
         <TouchableOpacity>
@@ -57,7 +64,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   SignInBtn: {
-    marginTop: '60%',
+    marginTop: '80%',
     width: '85%',
     height: '7%',
     borderRadius: 15,
