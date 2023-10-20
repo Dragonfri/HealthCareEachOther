@@ -24,7 +24,7 @@ export default function Main() {
             <View style={styles.header}>
                 <View><Text>s</Text></View>
                 <View style={styles.logoContainer}>
-                    <Image 
+                    <Image
                         style={styles.logoStyle}
                         source={Logo}
                     />
@@ -34,7 +34,6 @@ export default function Main() {
                 </View>
             </View>
             <View style={styles.second} />
-            <View style={styles.footer} />
         </View>
     );
 }
@@ -52,14 +51,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     second: {
-        flex: 8,
+        flex: 10,
         width: '100%',
         backgroundColor: 'blue',
-    },
-    footer: {
-        flex: 1.5,
-        width: '100%',
-        backgroundColor: 'yellow',
     },
     logoContainer: {
         // margin: '20%',

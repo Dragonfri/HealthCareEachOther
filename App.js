@@ -32,6 +32,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Profile from './component/main/profile';
 
 
 
@@ -47,6 +48,7 @@ function App() {
     //     <Stack.Screen name="Main" component={Main} />
     //   </Stack.Navigator>
     // </NavigationContainer>
+    // <Main />
     <Main />
   );
 }
