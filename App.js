@@ -33,6 +33,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import Profile from './component/main/profile';
+import ConstructGroup from './component/constructGroup/constructGroup';
 
 
 
@@ -40,16 +41,15 @@ const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    // <NavigationContainer>
-    //   <Stack.Navigator>
-    //     <Stack.Screen name="Start" component={StartPage} />
-    //     <Stack.Screen name="Register" component={RegisterPage} />
-    //     <Stack.Screen name="Login" component={LoginPage} />
-    //     <Stack.Screen name="Main" component={Main} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
-    // <Main />
-    <Main />
+     <NavigationContainer>
+       <Stack.Navigator>
+         <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
+         <Stack.Screen name="Start" component={StartPage} options={{ headerShown: false }} />
+         <Stack.Screen name="Register" component={RegisterPage} options={{ headerShown: false }} />
+         <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
+         <Stack.Screen name="ConstructGroup" component={ConstructGroup} options={{ headerShown: false }} />
+       </Stack.Navigator>
+     </NavigationContainer>
   );
 }
 
