@@ -3,6 +3,7 @@ import {React, useState } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Logo from '../../assets/images/byVoiceLogo.png';
+import ProfileImg from '../../assets/images/obama.jpg';
 
 import {
     Button,
@@ -42,7 +43,11 @@ export default function Main() {
             </View>
             <View style={styles.body}>
                 <ScrollView contentContainerStyle={styles.scrollStyle}>
-                    <Group />
+                    <Group groupImage={ProfileImg} groupName={'오바마 가족 방'} groupElement={'구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'} />
+                    <Group groupImage={ProfileImg} groupName={'오바마 가족 방'} groupElement={'구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'} />
+                    <Group groupImage={ProfileImg} groupName={'오바마 가족 방'} groupElement={'구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'} />
+                    <Group groupImage={ProfileImg} groupName={'오바마 가족 방'} groupElement={'구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'} />
+                    <Group groupImage={ProfileImg} groupName={'오바마 가족 방'} groupElement={'구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'} />
                 </ScrollView>
             </View>
 
@@ -70,6 +75,7 @@ const styles = StyleSheet.create({
     body: {
         flex: 10,
         width: '100%',
+        paddingTop: 32,
         backgroundColor: '#fafafa',
         position: 'relative',
     },
