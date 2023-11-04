@@ -21,10 +21,7 @@ import {
 import Profile from './profile';
 import Group from './group';
 
-export default function Main() {
-    const doSomething = () => {
-        
-    };
+export default function Main({navigation}) {
 
     return (
         <View style={styles.top}>
@@ -52,7 +49,7 @@ export default function Main() {
             </View>
 
             <View style={styles.addGroupBtn}>
-                <TouchableOpacity onPress={doSomething}>
+                <TouchableOpacity onPress={() => navigation.navigate('ConnectScreen')}>
                     <Text style={styles.btnText}>그룹 추가</Text>
                 </TouchableOpacity>
             </View>
