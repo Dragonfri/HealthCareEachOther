@@ -22,6 +22,17 @@ import Profile from './profile';
 import Group from './group';
 
 export default function Main({navigation}) {
+    const [myself, setMyself] = useState('구성원: 오바마');
+    const groups = [{groupImage: ProfileImg, groupName: '오바마 가족 방', groupElement: '구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'},
+    {groupImage: ProfileImg, groupName: '바이든 가족 방', groupElement: '구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'},
+    {groupImage: ProfileImg, groupName: '트럼프 가족 방', groupElement: '구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'},
+    {groupImage: ProfileImg, groupName: '문재인 가족 방', groupElement: '구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'},
+    {groupImage: ProfileImg, groupName: '윤석열 가족 방', groupElement: '구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'}];
+
+    const onPressGroup = (groupInfo) => {
+        // teamMaker 누구인지 연동
+        navigation.navigate('ManageGroup', {groupInfo, self: myself});
+    };
 
     return (
         <View style={styles.top}>
@@ -40,11 +51,13 @@ export default function Main({navigation}) {
             </View>
             <View style={styles.body}>
                 <ScrollView contentContainerStyle={styles.scrollStyle}>
-                    <Group groupImage={ProfileImg} groupName={'오바마 가족 방'} groupElement={'구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'} />
-                    <Group groupImage={ProfileImg} groupName={'오바마 가족 방'} groupElement={'구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'} />
-                    <Group groupImage={ProfileImg} groupName={'오바마 가족 방'} groupElement={'구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'} />
-                    <Group groupImage={ProfileImg} groupName={'오바마 가족 방'} groupElement={'구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'} />
-                    <Group groupImage={ProfileImg} groupName={'오바마 가족 방'} groupElement={'구성원: 오바마, 트럼프, 바이든, 힐러리, 문재인, 윤석열...'} />
+                {groups.map((group, index) => (
+                    <TouchableOpacity key={index} onPress={() => onPressGroup(group)}>
+                    <View>
+                        <Group groupImage={group.groupImage} groupName={group.groupName} groupElement={group.groupElement} /> 
+                    </View>
+                    </TouchableOpacity>
+                ))}
                 </ScrollView>
             </View>
 

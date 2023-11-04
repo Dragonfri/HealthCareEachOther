@@ -35,6 +35,7 @@ import {
 import Profile from './component/main/profile';
 import ConstructGroup from './component/constructGroup/constructGroup';
 import ConnectScreen from './component/constructGroup/connectScreen';
+import ManageGroup from './component/manageGroup/manageGroup';
 
 
 
@@ -49,6 +50,7 @@ function App() {
          <Stack.Screen name="Register" component={RegisterPage} options={{ headerShown: false }} />
          <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
          <Stack.Screen name="ConnectScreen" component={ConnectScreen} options={{headerShown: false}} />
+         <Stack.Screen name="ManageGroup" component={ManageGroup} options={{headerShown: false}} initialParams={null} />
        </Stack.Navigator>
      </NavigationContainer>
   );

@@ -21,7 +21,6 @@ import {
 
 export default function ConstructGroup({navigation}) {
     const [groupCode, setGroupCode] = useState('');
-    const examText = "ex) 우리 가족 운동 알람방";
 
     return (
         <View style={styles.container}>
