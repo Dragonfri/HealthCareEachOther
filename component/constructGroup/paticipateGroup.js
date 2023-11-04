@@ -20,29 +20,28 @@ import {
 
 
 export default function ConstructGroup({navigation}) {
-    const [groupName, setGroupName] = useState('');
+    const [groupCode, setGroupCode] = useState('');
     const examText = "ex) 우리 가족 운동 알람방";
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}><Text style={styles.headerText}>그룹 이름을 적어주세요.</Text></View>
+            <View style={styles.header}><Text style={styles.headerText}>초대 코드를 입력해주세요.</Text></View>
             <View style={styles.inputContainer}>
-                <View style={styles.textView}><Text style={styles.inputHeadText}>그룹 이름</Text></View>
+                <View style={styles.textView}><Text style={styles.inputHeadText}>초대 코드</Text></View>
                 <View style={styles.textView}><TextInput
                     style={styles.nameInput}
-                    placeholder="그룹이름 입력"
+                    placeholder="초대 코드 입력"
                     placeholderTextColor="gray"
-                    value={groupName}
-                    onChangeText={setGroupName}
+                    value={groupCode}
+                    onChangeText={setGroupCode}
                     />
                 </View>
-                <View style={styles.descriptionTextView}><Text style={styles.descriptionText}>알람의 용도에 맞게 이름을 설정해주세요.</Text></View>
-                <View style={styles.descriptionExamTextView}><Text style={styles.descriptionExamText}>{examText}</Text></View>
+                <View style={styles.descriptionTextView}><Text style={styles.descriptionText}>전달 받은 초대 코드를 붙여넣어주세요.</Text></View>
             </View>
 
             <View style={styles.addGroupBtn}>
                 <TouchableOpacity onPress={() => navigation.navigate('Main')}>
-                    <Text style={styles.btnText}>그룹 생성</Text>
+                    <Text style={styles.btnText}>그룹 참여</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -84,19 +83,12 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: '400',
     },
-    descriptionExamText: {
-        color: '#9EB38E',
-        fontSize: 12,
-    },
     textView: {
         marginTop: 10,
         marginBottom: 10,
     },
     descriptionTextView: {
         marginTop: 10,
-    },
-    descriptionExamTextView: {
-        marginTop: 5,
     },
     addGroupBtn: {
         width: 150,

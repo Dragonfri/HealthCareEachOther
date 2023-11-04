@@ -49,7 +49,7 @@ export default function Main({navigation}) {
             </View>
 
             <View style={styles.addGroupBtn}>
-                <TouchableOpacity onPress={() => navigation.navigate('ConstructGroup')}>
+                <TouchableOpacity onPress={() => navigation.navigate('ConnectScreen')}>
                     <Text style={styles.btnText}>그룹 추가</Text>
                 </TouchableOpacity>
             </View>
