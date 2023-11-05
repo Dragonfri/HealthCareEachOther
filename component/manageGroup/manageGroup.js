@@ -20,22 +20,43 @@ import {
   } from 'react-native';
 import Profile from '../main/profile';
 import ElementProfile from './elementProfile';
+import AlarmContainer from './alarmContainer';
 
 export default function ManageGroup() {
+    // 날짜 별로 가지고 온 계획 목록들
+    const plans = [{name: '구성원: 오바마', plan: [{alarmName: '밥 잘 챙겨먹기', alarmTime: '06:00', alarmState: '미완료'}]},
+                   {name: '트럼프', plan: [{alarmName: '고혈압 약 먹기', alarmTime: '07:30', alarmState: '계획 진행중'}, {alarmName: '혈압 재기', alarmTime: '08:00', alarmState: '미완료'}]},
+                   {name: '바이든', plan: [{alarmName: '고혈압 약 먹기', alarmTime: '09:00', alarmState: '미완료'}]},
+                   {name: '힐러리', plan: [{alarmName: '비타민 먹기', alarmTime: '12:00', alarmState: '완료'}, {alarmName: '마그네슘 먹기', alarmTime: '13:30', alarmState: '사진 추가'}]}
+    ];
+
     const route = useRoute();
     const groupInfo = route.params.groupInfo;
+    // 사용자 자기 자신
     const self = route.params.self;
+    // 그룹원 이름 리스트
     const groupElement = groupInfo.groupElement.split(',');
     const [selected, setSelected] = useState(route.params.self);
+    // 현재 리스트뷰에 보여줄 alarm list
+    const [alarms, setAlarms] = useState([{alarmName: '밥 잘 챙겨먹기', alarmTime: '06:00', alarmState: '미완료'}]);
 
     const getInviteCode = () => {
-      // fetch 그룹 코드 & 클립보드 복사
+      // to-do fetch 그룹 코드 & 클립보드 복사
       ToastAndroid.show('초대 코드가 클립보드에 복사되었습니다.', ToastAndroid.SHORT);
     };
 
     const onPressElement = (element) => {
       setSelected(element);
     };
+
+    useEffect(() => {
+      plans.forEach(member => {
+        if (member.name === selected) {
+          setAlarms(member.plan);
+        }
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selected]);
 
     return (
       <View style={styles.container}>
@@ -56,7 +77,17 @@ export default function ManageGroup() {
           </ScrollView>
         </View>
         <View style={styles.calendar}><Text>calendar</Text></View>
-        <View style={styles.scrollView}><Text>ScrollView</Text></View>
+        <View style={styles.scrollView}>
+          <ScrollView contentContainerStyle={styles.scrollStyle}>
+            {alarms.map((alarm, index) => (
+              <TouchableOpacity key={index} onPress={() => {}} activeOpacity={0.8}>
+                <View style={styles.planContainer}>
+                  <AlarmContainer alarmName={alarm.alarmName} alarmTime={alarm.alarmTime} alarmState={alarm.alarmState} />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
 
         <View style={styles.addGroupBtn}>
           <TouchableOpacity onPress={() => {}}>
@@ -89,7 +120,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 9,
-    backgroundColor: 'blue',
+    backgroundColor: 'white',
   },
   titleWrap: {
     marginRight: 10,
@@ -118,6 +149,9 @@ const styles = StyleSheet.create({
   elementText: {
     color: 'black',
     fontSize: 14,
+  },
+  planContainer: {
+    margin: 20,
   },
   addGroupBtn: {
     width: 150,
