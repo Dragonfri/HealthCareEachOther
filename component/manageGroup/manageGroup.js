@@ -24,10 +24,12 @@ import AlarmContainer from './alarmContainer';
 
 export default function ManageGroup() {
     // 날짜 별로 가지고 온 계획 목록들
-    const plans = [{name: '구성원: 오바마', plan: [{alarmName: '밥 잘 챙겨먹기', alarmTime: '06:00', alarmState: '미완료'}]},
+    const plans = [{name: '구성원: 오바마', plan: [{alarmName: '밥 잘 챙겨먹기', alarmTime: '06:00', alarmState: '계획 진행중'}]},
                    {name: '트럼프', plan: [{alarmName: '고혈압 약 먹기', alarmTime: '07:30', alarmState: '계획 진행중'}, {alarmName: '혈압 재기', alarmTime: '08:00', alarmState: '미완료'}]},
                    {name: '바이든', plan: [{alarmName: '고혈압 약 먹기', alarmTime: '09:00', alarmState: '미완료'}]},
-                   {name: '힐러리', plan: [{alarmName: '비타민 먹기', alarmTime: '12:00', alarmState: '완료'}, {alarmName: '마그네슘 먹기', alarmTime: '13:30', alarmState: '사진 추가'}]}
+                   {name: '힐러리', plan: [{alarmName: '비타민 먹기', alarmTime: '12:00', alarmState: '완료'}, {alarmName: '마그네슘 먹기', alarmTime: '13:30', alarmState: '사진 추가'}]},
+                   {name: '문재인', plan: []},
+                   {name: '윤석열...', plan: []},
     ];
 
     const route = useRoute();
@@ -38,7 +40,7 @@ export default function ManageGroup() {
     const groupElement = groupInfo.groupElement.split(',');
     const [selected, setSelected] = useState(route.params.self);
     // 현재 리스트뷰에 보여줄 alarm list
-    const [alarms, setAlarms] = useState([{alarmName: '밥 잘 챙겨먹기', alarmTime: '06:00', alarmState: '미완료'}]);
+    const [alarms, setAlarms] = useState([]);
 
     const getInviteCode = () => {
       // to-do fetch 그룹 코드 & 클립보드 복사
@@ -46,6 +48,7 @@ export default function ManageGroup() {
     };
 
     const onPressElement = (element) => {
+      setAlarms([]);
       setSelected(element);
     };
 
@@ -82,7 +85,7 @@ export default function ManageGroup() {
             {alarms.map((alarm, index) => (
               <TouchableOpacity key={index} onPress={() => {}} activeOpacity={0.8}>
                 <View style={styles.planContainer}>
-                  <AlarmContainer alarmName={alarm.alarmName} alarmTime={alarm.alarmTime} alarmState={alarm.alarmState} />
+                  <AlarmContainer alarmName={alarm.alarmName} alarmTime={alarm.alarmTime} alarmState={alarm.alarmState} owner={self === selected} />
                 </View>
               </TouchableOpacity>
             ))}
