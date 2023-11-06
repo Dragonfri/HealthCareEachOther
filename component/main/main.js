@@ -3,6 +3,7 @@ import {React, useState } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Logo from '../../assets/images/byVoiceLogo.png';
+import ProfileImg from '../../assets/images/obama.jpg';
 
 import {
     Button,
@@ -17,23 +18,54 @@ import {
     View,
     Image,
   } from 'react-native';
+import Profile from './profile';
+import Group from './group';
 
-export default function Main() {
+export default function Main({navigation}) {
+    const [myself, setMyself] = useState('구성원: 오바마');
+    const groups = [{groupImage: ProfileImg, groupName: '오바마 가족 방', groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...'},
+    {groupImage: ProfileImg, groupName: '바이든 가족 방', groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...'},
+    {groupImage: ProfileImg, groupName: '트럼프 가족 방', groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...'},
+    {groupImage: ProfileImg, groupName: '문재인 가족 방', groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...'},
+    {groupImage: ProfileImg, groupName: '윤석열 가족 방', groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...'}];
+
+    const onPressGroup = (groupInfo) => {
+        // teamMaker 누구인지 연동
+        navigation.navigate('ManageGroup', {groupInfo, self: myself});
+    };
+
     return (
         <View style={styles.top}>
             <View style={styles.header}>
-                <View><Text>s</Text></View>
+                <View style={{ width: 70 }}/>
                 <View style={styles.logoContainer}>
                     <Image
+                        // image source는 나중에 꼭 변환!
                         style={styles.logoStyle}
                         source={Logo}
                     />
                 </View>
-                <View>
-                    
+                <View style={styles.profileContainer}>
+                    <Profile />
                 </View>
             </View>
-            <View style={styles.second} />
+            <View style={styles.body}>
+                <ScrollView contentContainerStyle={styles.scrollStyle}>
+                {groups.map((group, index) => (
+                    <TouchableOpacity key={index} onPress={() => onPressGroup(group)}>
+                    <View>
+                        <Group groupImage={group.groupImage} groupName={group.groupName} groupElement={group.groupElement} /> 
+                    </View>
+                    </TouchableOpacity>
+                ))}
+                </ScrollView>
+            </View>
+
+            <View style={styles.addGroupBtn}>
+                <TouchableOpacity onPress={() => navigation.navigate('ConnectScreen')}>
+                    <Text style={styles.btnText}>그룹 추가</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -50,10 +82,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: 'white',
     },
-    second: {
+    body: {
         flex: 10,
         width: '100%',
-        backgroundColor: 'blue',
+        paddingTop: 32,
+        backgroundColor: '#fafafa',
+        position: 'relative',
     },
     logoContainer: {
         // margin: '20%',
@@ -61,10 +95,35 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         margin: '5%',
     },
-
     logoStyle: {
         width: 50,
         height: 50,
     },
-  
+    profileContainer: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        marginRight: '3%',
+    },
+    addGroupBtn: {
+        width: '36%',
+        height: '6.5%',
+        backgroundColor: '#DFF9F0',
+        position: 'absolute',
+        bottom: '7%',
+        left: '32%',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        borderRadius: 16,
+        elevation: 4,
+    },
+    btnText: {
+        textAlign: 'center',
+        color: '#3AD277',
+        fontSize: 18,
+        fontWeight: '500',
+    },
+    scrollStyle: {
+        flexGrow: 1,
+        alignItems: 'center',
+    },
 });

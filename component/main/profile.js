@@ -2,6 +2,7 @@
 import {React, useState } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import ProfileImg from '../../assets/images/obama.jpg';
 
 import {
     Button,
@@ -19,6 +20,20 @@ import {
 
 export default function Profile() {
     return (
-      <View></View>
+      <View>
+        <Image 
+          style={styles.profileImg}
+          source={ProfileImg}
+        />
+      </View>
     );
 }
+
+const styles = StyleSheet.create({
+  profileImg: {
+    width: 50,
+    height: 50,
+    borderRadius: 30,
+    alignItems: 'center',
+  },
+});
