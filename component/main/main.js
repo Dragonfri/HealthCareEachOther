@@ -52,7 +52,7 @@ export default function Main({navigation}) {
             <View style={styles.body}>
                 <ScrollView contentContainerStyle={styles.scrollStyle}>
                 {groups.map((group, index) => (
-                    <TouchableOpacity key={index} onPress={() => onPressGroup(group)}>
+                    <TouchableOpacity key={index} onPress={() => onPressGroup(group)} activeOpacity={0.8}>
                     <View>
                         <Group groupImage={group.groupImage} groupName={group.groupName} groupElement={group.groupElement} /> 
                     </View>

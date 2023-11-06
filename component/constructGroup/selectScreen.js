@@ -23,12 +23,12 @@ export default function SelectScreen({navigation}) {
         <View>
             <View style={styles.header}><Text style={styles.headerText}>그룹 생성 및 참여</Text></View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={() => navigation.navigate('constructGroup')}>
+                <TouchableOpacity onPress={() => navigation.navigate('constructGroup')} activeOpacity={0.8}>
                     <View style={styles.buttonWrap}>
                         <View><Text style={styles.buttonText}>그룹 생성</Text></View>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('participateGroup')}>
+                <TouchableOpacity onPress={() => navigation.navigate('participateGroup')} activeOpacity={0.8}>
                     <View style={styles.buttonWrap}>
                         <View><Text style={styles.buttonText}>그룹 참여</Text></View>
                     </View>
