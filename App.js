@@ -7,12 +7,12 @@
  */
 
 import React from 'react';
-import StartPage from "./component/loginComponent/startPage";
+import StartPage from './component/loginComponent/startPage';
 import RegisterPage from './component/loginComponent/registerPage';
 import Main from './component/main/main';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginPage from './component/loginComponent/loginPage';
 
 import {
@@ -36,23 +36,52 @@ import Profile from './component/main/profile';
 import ConstructGroup from './component/constructGroup/constructGroup';
 import ConnectScreen from './component/constructGroup/connectScreen';
 import ManageGroup from './component/manageGroup/manageGroup';
-
-
+import CreateAlarmScreen from './component/createAlarm/createAlarmScreen';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-     <NavigationContainer>
-       <Stack.Navigator>
-         <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
-         <Stack.Screen name="Start" component={StartPage} options={{ headerShown: false }} />
-         <Stack.Screen name="Register" component={RegisterPage} options={{ headerShown: false }} />
-         <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
-         <Stack.Screen name="ConnectScreen" component={ConnectScreen} options={{headerShown: false}} />
-         <Stack.Screen name="ManageGroup" component={ManageGroup} options={{headerShown: false}} initialParams={null} />
-       </Stack.Navigator>
-     </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Start"
+          component={StartPage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterPage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginPage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ConnectScreen"
+          component={ConnectScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ManageGroup"
+          component={ManageGroup}
+          options={{headerShown: false}}
+          initialParams={null}
+        />
+        <Stack.Screen
+          name="CreateAlarm"
+          component={CreateAlarmScreen}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

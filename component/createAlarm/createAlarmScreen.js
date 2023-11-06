@@ -16,6 +16,11 @@ import {
   View,
   Image,
 } from 'react-native';
-import SelectScreen from './selectScreen';
-import ConstructGroup from './constructGroup';
-import ParticipateGroup from './paticipateGroup';
+
+export default function CreateAlarmScreen() {
+  return (
+    <View>
+      <Text>알람 생성</Text>
+    </View>
+  );
+}
