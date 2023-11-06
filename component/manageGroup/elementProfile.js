@@ -26,7 +26,7 @@ const MySelf = () => {
     );
 };
 
-export default function ElementProfile({elementName, selected, self, selectedElement}) {
+export default function ElementProfile({elementName, selected, self, element}) {
     return (
       <View style={styles.container}>
         <View style={selected === true ? styles.imageSelectedWrap : styles.imageWrap}>
@@ -36,7 +36,7 @@ export default function ElementProfile({elementName, selected, self, selectedEle
           />
         </View>
         <View><Text style={selected === true ? styles.selectedElementName : styles.elementNameStyle}>{elementName}</Text></View>
-        {self === selectedElement ? <MySelf /> : <></>}
+        {self === element ? <MySelf /> : <></>}
      </View>
     );
 }

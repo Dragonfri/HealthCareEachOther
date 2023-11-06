@@ -5,14 +5,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 
 import {
-    Button,
-    SafeAreaView,
     ScrollView,
-    StatusBar,
     StyleSheet,
     Text,
-    TextInput,
-    useColorScheme,
     TouchableOpacity,
     View,
     Image,
@@ -23,6 +18,7 @@ import Profile from '../main/profile';
 import ElementProfile from './elementProfile';
 import AlarmContainer from './alarmContainer';
 import { Calendar } from "react-native-calendars";
+import DownArrow from "../../assets/images/down-arrow.png";
 
 export default function ManageGroup() {
     // 날짜 별로 가지고 온 계획 목록들
@@ -34,6 +30,7 @@ export default function ManageGroup() {
                    {name: '윤석열...', plan: []},
     ];
 
+    const today = new Date();
     const route = useRoute();
     const groupInfo = route.params.groupInfo;
     // 사용자 자기 자신
@@ -44,7 +41,8 @@ export default function ManageGroup() {
     // 현재 리스트뷰에 보여줄 alarm list
     const [alarms, setAlarms] = useState([]);
     const [showCalendar, setShowCalendar] = useState(false);
-    const [date, setDate] = useState({"dateString": "2023년 11월 6일", "day": 6, "month": 11, "timestamp": 0, "year": 2023})
+    const [date, setDate] = useState({'dateString': today.getFullYear() + '-' + (today.getMonth() + 1)
+    + '-' + today.getDate(), 'day': today.getDate(), 'month': today.getMonth() + 1, 'timestamp': 0, 'year': today.getFullYear()});
 
     const getInviteCode = () => {
       // to-do fetch 그룹 코드 & 클립보드 복사
@@ -77,7 +75,7 @@ export default function ManageGroup() {
             {groupElement.map((element, index) => (
               <TouchableOpacity key={index} onPress={() => onPressElement(element)} activeOpacity={0.8}>
                 <View style={styles.elementStyle}>
-                  <ElementProfile elementName={element} selected={selected === element} self={self} selectedElement={element} />
+                  <ElementProfile elementName={element} selected={selected === element} self={self} element={element} />
                 </View>
               </TouchableOpacity>
             ))}
@@ -85,12 +83,13 @@ export default function ManageGroup() {
         </View>
         <View style={styles.calendar}>
           <TouchableOpacity onPress={() => setShowCalendar(true)} activeOpacity={0.8}>
-            <View>
+            <View style={styles.calendarContainer}>
               <Text style={styles.calendarText}>{date.dateString}</Text>
+              <View style={styles.downArrowContainer}><Image source={DownArrow} style={styles.downArrow} /></View>
             </View>
           </TouchableOpacity>
           <Modal visible={showCalendar} animationType="fade" transparent={true}>
-              <Calendar style={styles.calendarStyle} onDayPress={(date) => {setDate(date); setShowCalendar(false)} }/>
+              <Calendar monthFormat={'yyyy MM'} style={styles.calendarStyle} onDayPress={(date) => {setDate(date); setShowCalendar(false)}}/>
           </Modal>
         </View>
         <View style={styles.scrollView}>
@@ -181,6 +180,18 @@ const styles = StyleSheet.create({
     elevation: 2,
     margin: 40,
     marginTop: 170,
+  },
+  calendarContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  downArrow: {
+    width: 15,
+    height: 15,
+    margin: 5,
+  },
+  downArrowContainer: {
+    justifyContent:'flex-end',
   },
   addGroupBtn: {
     width: 150,
