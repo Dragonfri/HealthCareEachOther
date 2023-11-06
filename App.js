@@ -36,6 +36,7 @@ import Profile from './component/main/profile';
 import ConstructGroup from './component/constructGroup/constructGroup';
 import ConnectScreen from './component/constructGroup/connectScreen';
 import ManageGroup from './component/manageGroup/manageGroup';
+import AudioComponent from './component/manageGroup/audioComponent';
 
 
 
@@ -46,6 +47,7 @@ function App() {
      <NavigationContainer>
        <Stack.Navigator>
          <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
+         <Stack.Screen name="AudioComponent" component={AudioComponent} options={{headerShown: false}} />
          <Stack.Screen name="Start" component={StartPage} options={{ headerShown: false }} />
          <Stack.Screen name="Register" component={RegisterPage} options={{ headerShown: false }} />
          <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
