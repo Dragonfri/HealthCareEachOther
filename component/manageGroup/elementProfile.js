@@ -1,44 +1,51 @@
 /* eslint-disable prettier/prettier */
-import {React, useState } from 'react';
+import {React, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ProfileImg from '../../assets/images/obama.jpg';
 
 import {
-    Button,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    useColorScheme,
-    TouchableOpacity,
-    View,
-    Image,
-  } from 'react-native';
+  Button,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  useColorScheme,
+  TouchableOpacity,
+  View,
+  Image,
+} from 'react-native';
 
 const MySelf = () => {
-    return (
-        <View style={styles.mySelfWrap}>
-            <Text style={styles.mySelfText}>나</Text>
-        </View>
-    );
+  return (
+    <View style={styles.mySelfWrap}>
+      <Text style={styles.mySelfText}>나</Text>
+    </View>
+  );
 };
 
-export default function ElementProfile({elementName, selected, self, selectedElement}) {
-    return (
-      <View style={styles.container}>
-        <View style={selected === true ? styles.imageSelectedWrap : styles.imageWrap}>
-          <Image
-            style={styles.profileImg}
-            source={ProfileImg}
-          />
-        </View>
-        <View><Text style={selected === true ? styles.selectedElementName : styles.elementNameStyle}>{elementName}</Text></View>
-        {self === selectedElement ? <MySelf /> : <></>}
-     </View>
-    );
+export default function ElementProfile({elementName, selected, self, element}) {
+  return (
+    <View style={styles.container}>
+      <View
+        style={selected === true ? styles.imageSelectedWrap : styles.imageWrap}>
+        <Image style={styles.profileImg} source={ProfileImg} />
+      </View>
+      <View>
+        <Text
+          style={
+            selected === true
+              ? styles.selectedElementName
+              : styles.elementNameStyle
+          }>
+          {elementName}
+        </Text>
+      </View>
+      {self === element ? <MySelf /> : <></>}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

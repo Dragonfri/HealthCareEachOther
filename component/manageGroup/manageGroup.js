@@ -135,7 +135,7 @@ export default function ManageGroup({navigation}) {
                   elementName={element}
                   selected={selected === element}
                   self={self}
-                  selectedElement={element}
+                  element={element}
                 />
               </View>
             </TouchableOpacity>
