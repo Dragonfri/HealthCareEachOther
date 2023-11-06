@@ -17,10 +17,12 @@ import {
     View,
     Image,
     ToastAndroid,
+    Modal,
   } from 'react-native';
 import Profile from '../main/profile';
 import ElementProfile from './elementProfile';
 import AlarmContainer from './alarmContainer';
+import { Calendar } from "react-native-calendars";
 
 export default function ManageGroup() {
     // 날짜 별로 가지고 온 계획 목록들
@@ -41,6 +43,8 @@ export default function ManageGroup() {
     const [selected, setSelected] = useState(route.params.self);
     // 현재 리스트뷰에 보여줄 alarm list
     const [alarms, setAlarms] = useState([]);
+    const [showCalendar, setShowCalendar] = useState(false);
+    const [date, setDate] = useState({"dateString": "2023년 11월 6일", "day": 6, "month": 11, "timestamp": 0, "year": 2023})
 
     const getInviteCode = () => {
       // to-do fetch 그룹 코드 & 클립보드 복사
@@ -79,7 +83,16 @@ export default function ManageGroup() {
             ))}
           </ScrollView>
         </View>
-        <View style={styles.calendar}><Text>calendar</Text></View>
+        <View style={styles.calendar}>
+          <TouchableOpacity onPress={() => setShowCalendar(true)} activeOpacity={0.8}>
+            <View>
+              <Text style={styles.calendarText}>{date.dateString}</Text>
+            </View>
+          </TouchableOpacity>
+          <Modal visible={showCalendar} animationType="fade" transparent={true}>
+              <Calendar style={styles.calendarStyle} onDayPress={(date) => {setDate(date); setShowCalendar(false)} }/>
+          </Modal>
+        </View>
         <View style={styles.scrollView}>
           <ScrollView contentContainerStyle={styles.scrollStyle}>
             {alarms.map((alarm, index) => (
@@ -104,6 +117,7 @@ export default function ManageGroup() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   space: {
     flex: 1,
@@ -119,7 +133,8 @@ const styles = StyleSheet.create({
   },
   calendar: {
     flex: 1,
-    backgroundColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scrollView: {
     flex: 9,
@@ -155,6 +170,17 @@ const styles = StyleSheet.create({
   },
   planContainer: {
     margin: 20,
+  },
+  calendarText: {
+    color: 'black',
+    fontSize: 22,
+    fontWeight: '700',
+  },
+  calendarStyle: {
+    borderRadius: 10,
+    elevation: 2,
+    margin: 40,
+    marginTop: 170,
   },
   addGroupBtn: {
     width: 150,
