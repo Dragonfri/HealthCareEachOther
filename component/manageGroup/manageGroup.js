@@ -4,14 +4,9 @@ import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {
-  Button,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  TextInput,
-  useColorScheme,
   TouchableOpacity,
   View,
   Image,
@@ -22,6 +17,7 @@ import Profile from '../main/profile';
 import ElementProfile from './elementProfile';
 import AlarmContainer from './alarmContainer';
 import {Calendar} from 'react-native-calendars';
+import DownArrow from '../../assets/images/down-arrow.png';
 
 export default function ManageGroup({navigation}) {
   // 날짜 별로 가지고 온 계획 목록들
@@ -68,6 +64,7 @@ export default function ManageGroup({navigation}) {
     {name: '윤석열...', plan: []},
   ];
 
+  const today = new Date();
   const route = useRoute();
   const groupInfo = route.params.groupInfo;
   // 사용자 자기 자신
@@ -79,11 +76,16 @@ export default function ManageGroup({navigation}) {
   const [alarms, setAlarms] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [date, setDate] = useState({
-    dateString: '2023년 11월 6일',
-    day: 6,
-    month: 11,
+    dateString:
+      today.getFullYear() +
+      '-' +
+      (today.getMonth() + 1) +
+      '-' +
+      today.getDate(),
+    day: today.getDate(),
+    month: today.getMonth() + 1,
     timestamp: 0,
-    year: 2023,
+    year: today.getFullYear(),
   });
 
   const getInviteCode = () => {
@@ -146,12 +148,16 @@ export default function ManageGroup({navigation}) {
         <TouchableOpacity
           onPress={() => setShowCalendar(true)}
           activeOpacity={0.8}>
-          <View>
+          <View style={styles.calendarContainer}>
             <Text style={styles.calendarText}>{date.dateString}</Text>
+            <View style={styles.downArrowContainer}>
+              <Image source={DownArrow} style={styles.downArrow} />
+            </View>
           </View>
         </TouchableOpacity>
         <Modal visible={showCalendar} animationType="fade" transparent={true}>
           <Calendar
+            monthFormat={'yyyy MM'}
             style={styles.calendarStyle}
             onDayPress={date => {
               setDate(date);
@@ -256,6 +262,18 @@ const styles = StyleSheet.create({
     elevation: 2,
     margin: 40,
     marginTop: 170,
+  },
+  calendarContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  downArrow: {
+    width: 15,
+    height: 15,
+    margin: 5,
+  },
+  downArrowContainer: {
+    justifyContent: 'flex-end',
   },
   addGroupBtn: {
     width: 150,

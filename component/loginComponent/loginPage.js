@@ -57,7 +57,7 @@ export default function LoginPage({navigation}) {
           style={styles.PwInput}
           placeholder="비밀번호 입력"
           placeholderTextColor="gray"
-          value={id}
+          value={password}
           onChange={setPassword}
         />
         <View style={styles.BtnContainer}>
