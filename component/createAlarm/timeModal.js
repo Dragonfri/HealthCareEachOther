@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 16,
     fontWeight: '600',
-    color: 'black',
+    color: 'white',
   },
 
   // Add styles for your time picker here
