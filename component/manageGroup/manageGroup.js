@@ -50,6 +50,9 @@ export default function ManageGroup() {
     };
 
     const onPressElement = (element) => {
+      if (element === selected) {
+        return;
+      }
       setSelected(element);
       setAlarms([]);
     };
@@ -75,7 +78,6 @@ export default function ManageGroup() {
             {groupElement.map((element, index) => (
               <TouchableOpacity key={index} onPress={() => onPressElement(element)} activeOpacity={0.8}>
                 <View style={styles.elementStyle}>
-                  {}
                   <ElementProfile elementName={element} selected={selected === element} self={self} element={element} />
                 </View>
               </TouchableOpacity>

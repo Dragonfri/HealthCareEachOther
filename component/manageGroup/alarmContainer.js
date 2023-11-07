@@ -24,14 +24,12 @@ const IncompletePlan = ({time}) => {
     return (
         <View style={styles.incompleteContainer}>
             {/* 실제 시간 계산 */}
-            <View><Text style={styles.imcompleteRestTime}>1분뒤 시작</Text></View>
             <View><Text style={styles.incompleteText}>미완료</Text></View>
         </View>
     );
 };
 
 const Delayed = ({time, owner, setContainerState}) => {
-    console.log('시간이 되었지만 수행하지 않았어요!')
     return (
         <View>
             {owner ? <DelayedOwner time={time} setContainerState={setContainerState} /> : <DelayedNotOwner time={time} /> }
@@ -42,7 +40,6 @@ const Delayed = ({time, owner, setContainerState}) => {
 const DelayedNotOwner = ({time}) => {
     return (
         <View style={styles.delayedPlanContainer}>
-            <View><Text style={styles.delayedPlanRestTime}>인증 완료까지 19분</Text></View>
             <View><Text style={styles.delayedNotOwnerText}>계획 진행중</Text></View>
         </View>
     );
@@ -51,7 +48,6 @@ const DelayedNotOwner = ({time}) => {
 const DelayedOwner = ({time, setContainerState}) => {
     return (
         <View style={styles.delayedPlanContainer}>
-            <View><Text style={styles.delayedPlanRestTime}>인증 완료까지 19분</Text></View>
             <View>
                 <TouchableOpacity activeOpacity={0.8} onPress={() => {setContainerState('완료')}}>
                     <View style={styles.delayedPlanBtn}><Text style={styles.delayedPlanBtnText}>완료 하기</Text></View>
@@ -65,12 +61,7 @@ const DelayedOwner = ({time, setContainerState}) => {
 const CompletePlan = ({setContainerState}) => {
     return (
         <View style={styles.delayedPlanContainer}>
-            <View>
-                <TouchableOpacity activeOpacity={0.8} onPress={() => {setContainerState('')}}>
-                    <View style={styles.delayedPlanBtn}><Text style={styles.delayedPlanBtnText}>사진 추가</Text></View>
-                </TouchableOpacity>
-            </View>
-            <View><Text style={styles.delayedNotOwnerText}>완료</Text></View>
+            <View><Text style={styles.completeText}>완료</Text></View>
         </View>
     );
 };
@@ -130,34 +121,19 @@ const styles = StyleSheet.create({
     incompleteContainer: {
         height: '100%',
         flexDirection: 'column',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-    },
-    imcompleteRestTime: {
-        color: '#C40303',
-        fontSize: 12,
-        fontWeight: '500',
-        textAlign: 'right',
-        marginLeft: 30,
+        justifyContent: 'center',
     },
     incompleteText: {
         color: '#DFF9F0',
         fontSize: 34,
         fontWeight: '700',
         marginRight: 30,
-        marginBottom: 10,
     },
     delayedPlanContainer: {
         height: '100%',
         justifyContent: 'space-around',
         alignItems: 'center',
         padding: 5,
-    },
-    delayedPlanRestTime: {
-        color: '#C40303',
-        fontSize: 12,
-        fontWeight: '500',
-        paddingRight: 22,
     },
     delayedPlanBtn: {
         width: 85,
@@ -184,6 +160,12 @@ const styles = StyleSheet.create({
         color: '#3AD277',
         fontSize: 24,
         fontWeight: '600',
-        marginLeft: -20,
+        marginRight: 20,
+    },
+    completeText: {
+        color: '#3AD277',
+        fontSize: 28,
+        fontWeight: '600',
+        marginRight: 30,
     },
 });
