@@ -24,7 +24,79 @@ import {
   Image,
 } from 'react-native';
 
-export default function CreateAlarmScreen() {
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+
+import AudioRecord from 'react-native-audio-record';
+import Sound from 'react-native-sound';
+
+export default function CreateAlarmScreen({navigation}) {
+  //녹음 시작
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedFile, setRecordedFile] = useState(null);
+
+  const checkAndRequestPermission = async () => {
+    const result = await check(PERMISSIONS.ANDROID.RECORD_AUDIO);
+
+    if (result === RESULTS.DENIED) {
+      const permissionResult = await request(PERMISSIONS.ANDROID.RECORD_AUDIO);
+
+      if (permissionResult !== RESULTS.GRANTED) {
+        console.log('음성 녹음 권한이 거부되었습니다.');
+        return;
+      }
+    }
+    return result === RESULTS.GRANTED;
+  };
+
+  const startRecording = async () => {
+    const hasPermission = await checkAndRequestPermission();
+    if (!hasPermission) {
+      console.log('리턴됨');
+      return; // 권한이 없으면 녹음 시작하지 않음
+    }
+
+    AudioRecord.init({
+      sampleRate: 44100,
+      channels: 1, // 1 or 2, default 1
+      bitsPerSample: 16, // 8 or 16, default 16
+      audioSource: 6,
+    });
+
+    AudioRecord.start();
+    setIsRecording(true);
+    setRecordedFile(null);
+
+    // 녹음 중인 동안 로직 추가
+
+    this.recordingInterval = setTimeout(async () => {
+      const audioPath = await AudioRecord.stop();
+      setIsRecording(true);
+      setRecordedFile(audioPath);
+    }, 60000); // 녹음 시간 (60초)을 조절하세요
+  };
+
+  const StopRecording = async () => {
+    clearTimeout(this.recordingInterval);
+    const audioPath = await AudioRecord.stop();
+    setIsRecording(false);
+    setRecordedFile(audioPath);
+  };
+
+  const playRecording = () => {
+    console.log(recordedFile);
+    if (recordedFile) {
+      const sound = new Sound(recordedFile, '', error => {
+        if (error) {
+          console.log('Error', error);
+        } else {
+          sound.play(() => sound.release());
+        }
+      });
+    }
+  };
+
+  //녹음끝
+
   // 모달의 활성화 상태를 관리하는 state
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -54,6 +126,13 @@ export default function CreateAlarmScreen() {
       );
     }
     return null; // 둘 중 하나라도 없으면 아무것도 표시하지 않음
+  };
+
+  const handleSubmit = () => {
+    // 필요한 로직을 여기에 추가...
+
+    // 이전 페이지로 돌아가기
+    navigation.goBack();
   };
 
   return (
@@ -90,12 +169,18 @@ export default function CreateAlarmScreen() {
             당신의 목소리로 알람음을 설정해주세요.
           </Text>
           <View style={styles.LastInputContainer}>
-            <TouchableOpacity style={styles.VoiceRow} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.VoiceRow}
+              onPress={isRecording ? StopRecording : startRecording}>
               <Image source={MikeImage} style={styles.Image} />
-              <Text style={styles.recordText}>녹음 시작/중지</Text>
+              <Text style={styles.recordText}>
+                {isRecording ? '녹음 중지' : '녹음 시작'}
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.VoiceRow} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.VoiceRow}
+              onPress={() => playRecording()}>
               <Image source={PlayImage} style={styles.Image} />
               <Text style={styles.recordText}>녹음 재생</Text>
             </TouchableOpacity>
@@ -104,7 +189,7 @@ export default function CreateAlarmScreen() {
       </View>
 
       <View style={styles.SubmitContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.SubmitBtn}>
+        <TouchableOpacity onPress={handleSubmit} style={styles.SubmitBtn}>
           <Text style={styles.btnText}>설정하기</Text>
         </TouchableOpacity>
       </View>
