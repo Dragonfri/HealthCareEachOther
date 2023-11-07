@@ -97,8 +97,11 @@ export default function ManageGroup({navigation}) {
   };
 
   const onPressElement = element => {
-    setAlarms([]);
+    if (element === selected) {
+      return;
+    }
     setSelected(element);
+    setAlarms([]);
   };
 
   useEffect(() => {
