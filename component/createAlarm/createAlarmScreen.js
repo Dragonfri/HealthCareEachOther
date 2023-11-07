@@ -7,6 +7,8 @@ const ClockImage = require('../../assets/images/clock.png');
 const RetryImage = require('../../assets/images/retry.png');
 const MikeImage = require('../../assets/images/mike.png');
 
+import TimeModal from './timeModal';
+
 import {
   Button,
   SafeAreaView,
@@ -22,6 +24,38 @@ import {
 } from 'react-native';
 
 export default function CreateAlarmScreen() {
+  // 모달의 활성화 상태를 관리하는 state
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  // 선택된 요일과 시간을 저장하는 state
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [selectedTime, setSelectedTime] = useState('');
+
+  // TimeModal에서 설정을 완료하고 전달된 정보를 받을 콜백 함수
+  const handleTimeSelection = (days, time) => {
+    setSelectedDays(days);
+    setSelectedTime(time);
+    setIsModalVisible(false); // 모달 비활성화
+  };
+
+  // selectedDays와 selectedTime이 둘 다 있을 때만 SelectedDateTime을 표시하는 함수
+  const renderSelectedDateTime = () => {
+    if (selectedDays.length > 0 && selectedTime) {
+      return (
+        <View style={styles.SelectedDateTimeView}>
+        <Text style={styles.SelectedDateTime}>
+          선택된 요일: {selectedDays.join(', ')}
+        </Text>
+        <Text style={styles.SelectedDateTime}>
+        선택된 시간: {selectedTime}
+        </Text>
+        </View>
+
+      );
+    }
+    return null; // 둘 중 하나라도 없으면 아무것도 표시하지 않음
+  };
+
   return (
     <View style={styles.TopContainer}>
       <View style={styles.Title}>
@@ -31,9 +65,11 @@ export default function CreateAlarmScreen() {
         <Text style={styles.InfoText}>
           계획 시간 및 기타 옵션을 선택하세요.
         </Text>
+
         <ScrollView
           style={{width: '80%'}}
-          contentContainerStyle={styles.AlarmScrollContainer}>
+          contentContainerStyle={styles.AlarmScrollContainer}
+          showsVerticalScrollIndicator={false}>
           <Text style={styles.PlanText}>계획명을 입력해주세요</Text>
           <TextInput
             style={styles.PlanTextInput}
@@ -42,22 +78,12 @@ export default function CreateAlarmScreen() {
           />
           <Text style={styles.PlanText}>계획 시간을 설정해주세요</Text>
           <View style={styles.OtherInputContainer}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setIsModalVisible(true)} style={styles.DateTimeRow}>
               <Image source={ClockImage} style={styles.Image} />
+              {renderSelectedDateTime()}
             </TouchableOpacity>
           </View>
-          <Text style={styles.PlanText}>계획 이행 시간을 설정해주세요</Text>
-          <View style={styles.OtherInputContainer}>
-            <TouchableOpacity>
-              <Image source={ClockImage} style={styles.Image} />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.PlanText}>알람 반복 횟수를 설정해주세요</Text>
-          <View style={styles.OtherInputContainer}>
-            <TouchableOpacity>
-              <Image source={RetryImage} style={styles.Image} />
-            </TouchableOpacity>
-          </View>
+          
           <Text style={styles.PlanText}>
             당신의 목소리로 알람음을 설정해주세요.
           </Text>
@@ -75,6 +101,11 @@ export default function CreateAlarmScreen() {
           <Text style={styles.btnText}>설정하기</Text>
         </TouchableOpacity>
       </View>
+      <TimeModal
+        onSubmit={handleTimeSelection}
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+      />
     </View>
   );
 }
@@ -107,7 +138,7 @@ const styles = StyleSheet.create({
   },
   AlarmScrollContainer: {
     flexGrow: 1,
-    // backgroundColor: 'yellow',
+    // backgroundColor: 'black',
   },
   PlanText: {
     marginTop: '15%',
@@ -144,13 +175,13 @@ const styles = StyleSheet.create({
     // backgroundColor: 'aqua',
     borderBottomWidth: 1,
     borderBottomColor: 'gray',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   LastInputContainer: {
     width: '100%',
     height: '5%',
     // backgroundColor: 'aqua',
-    marginBottom: '50%',
+    // marginBottom: '50%',
     marginTop: '10%',
     borderBottomWidth: 1,
     borderBottomColor: 'gray',
@@ -159,9 +190,23 @@ const styles = StyleSheet.create({
   Image: {
     width: 30,
     height: 30,
+    marginBottom: "3%",
+    
   },
   btnText: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  SelectedDateTimeView: {
+    marginBottom: "5%",
+    marginLeft: "5%"
+  },
+  SelectedDateTime: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: "black",
+  }, DateTimeRow: { // 새로운 스타일
+    flexDirection: 'row', // 가로 방향으로 아이템을 배열한다
+    alignItems: 'center', // 세로 방향으로 중앙에 위치
   },
 });
