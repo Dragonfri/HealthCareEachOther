@@ -45,13 +45,13 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Main"
-          component={Main}
+          name="Start"
+          component={StartPage}
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Start"
-          component={StartPage}
+          name="Main"
+          component={Main}
           options={{headerShown: false}}
         />
         <Stack.Screen

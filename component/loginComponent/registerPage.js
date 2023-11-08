@@ -2,6 +2,7 @@
 import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Config from 'react-native-config';
 
 import {
   Button,
@@ -20,9 +21,15 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nickname, setNickname] = useState('');
+  const [isEmpty, setIsEmpty] = useState(false);
 
   const signUpAuth = () => {
-    fetch('ip:8080/api/mvp/member/register', {
+    if (email === '' || password === '' || nickname === '') {
+      setIsEmpty(true);
+      return;
+    }
+
+    fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/member/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,6 +84,7 @@ export default function RegisterPage() {
           onChangeText={setNickname}
         />
       </View>
+      <View>{isEmpty ? <Text style={styles.errorText}>이메일, 비밀번호, 닉네임을 모두 입력해주세요.</Text> : <></>}</View>
       <View style={styles.SignInBtn}>
         <TouchableOpacity onPress={signUpAuth}>
           <Text style={styles.SignInBtnText}>회원가입</Text>
@@ -139,5 +147,10 @@ const styles = StyleSheet.create({
     color: 'black',
     borderBottomWidth: 1,
     borderBottomColor: 'gray',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 15,
+    fontWeight: '600',
   },
 });

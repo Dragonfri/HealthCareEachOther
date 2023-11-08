@@ -2,6 +2,7 @@
 import {React, useState } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Config from 'react-native-config';
 
 import {
   Button,
@@ -19,10 +20,19 @@ import {
 export default function LoginPage({navigation}) {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const [isEmpty, setIsEmpty] = useState(false);
+
+  console.log(Config.REACT_APP_IP_ADDRESS);
+
 
   const loginAuth = () => {
+    if (id === '' || password === '') {
+      setIsEmpty(true);
+      return;
+    }
+
     // ip address hiding
-    fetch("ip/api/login", {
+    fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/login`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
@@ -72,6 +82,7 @@ export default function LoginPage({navigation}) {
           </TouchableOpacity>
         </View>
       </View>
+      <View>{isEmpty ? <Text style={styles.errorText}>id, password 모두 입력해주세요.</Text> : <></>}</View>
       <View style={styles.SignInBtn}>
         <TouchableOpacity onPress={loginAuth}>
           <Text style={styles.SignInBtnText}>로그인</Text>
@@ -157,5 +168,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textDecorationLine: 'underline',
     marginLeft: '40%',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 15,
+    fontWeight: '600',
   },
 });
