@@ -67,7 +67,7 @@ function App() {
             header: () => (
               <View>
                 <TouchableOpacity
-                  hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
                   onPress={() => {
                     navigation.goBack();
                   }}>
@@ -93,7 +93,7 @@ function App() {
             header: () => (
               <View>
                 <TouchableOpacity
-                  hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
                   onPress={() => {
                     navigation.goBack();
                   }}>
@@ -119,7 +119,7 @@ function App() {
             header: () => (
               <View>
                 <TouchableOpacity
-                  hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
                   onPress={() => {
                     navigation.goBack();
                   }}>
@@ -145,7 +145,7 @@ function App() {
             header: () => (
               <View>
                 <TouchableOpacity
-                  hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
                   onPress={() => {
                     navigation.goBack();
                   }}>
@@ -172,7 +172,7 @@ function App() {
             header: () => (
               <View>
                 <TouchableOpacity
-                  hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
                   onPress={() => {
                     navigation.goBack();
                   }}>
@@ -181,7 +181,7 @@ function App() {
                     style={{
                       position: 'absolute',
                       left: 30,
-                      top: 15,
+                      top: 35,
                       width: 30,
                       height: 30,
                     }}
@@ -198,7 +198,7 @@ function App() {
             header: () => (
               <View>
                 <TouchableOpacity
-                  hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
                   onPress={() => {
                     navigation.goBack();
                   }}>
@@ -207,7 +207,7 @@ function App() {
                     style={{
                       position: 'absolute',
                       left: 30,
-                      top: 15,
+                      top: 35,
                       width: 30,
                       height: 30,
                     }}
