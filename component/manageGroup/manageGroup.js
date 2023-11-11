@@ -122,7 +122,7 @@ export default function ManageGroup({navigation}) {
         </View>
         <TouchableOpacity onPress={() => getInviteCode()}>
           <View style={styles.copyCodeWrap}>
-            <Text>초대 코드 복사</Text>
+            <Text style={styles.inviteText}>초대 코드 복사</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -174,7 +174,7 @@ export default function ManageGroup({navigation}) {
           {alarms.map((alarm, index) => (
             <TouchableOpacity
               key={index}
-              onPress={() => {}}
+              onPress={() => navigation.navigate('AlarmEdit')}
               activeOpacity={0.8}>
               <View style={styles.planContainer}>
                 <AlarmContainer
@@ -294,6 +294,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#3AD277',
     fontSize: 18,
+    fontWeight: '500',
+  },
+  inviteText: {
+    color: 'white',
     fontWeight: '500',
   },
 });

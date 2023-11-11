@@ -23,6 +23,9 @@ import {
   Text,
   useColorScheme,
   View,
+  Button,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 
 import {
@@ -37,6 +40,9 @@ import ConstructGroup from './component/constructGroup/constructGroup';
 import ConnectScreen from './component/constructGroup/connectScreen';
 import ManageGroup from './component/manageGroup/manageGroup';
 import CreateAlarmScreen from './component/createAlarm/createAlarmScreen';
+import AlarmEdit from './component/alramEdit/alarmEdit';
+
+import DownArrow from './assets/images/back.png';
 
 const Stack = createNativeStackNavigator();
 
@@ -57,28 +63,159 @@ function App() {
         <Stack.Screen
           name="Register"
           component={RegisterPage}
-          options={{headerShown: false}}
+          options={({navigation}) => ({
+            header: () => (
+              <View>
+                <TouchableOpacity
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+                  onPress={() => {
+                    navigation.goBack();
+                  }}>
+                  <Image
+                    source={DownArrow}
+                    style={{
+                      position: 'absolute',
+                      left: 30,
+                      top: 15,
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
+          })}
         />
         <Stack.Screen
           name="Login"
           component={LoginPage}
-          options={{headerShown: false}}
+          options={({navigation}) => ({
+            header: () => (
+              <View>
+                <TouchableOpacity
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+                  onPress={() => {
+                    navigation.goBack();
+                  }}>
+                  <Image
+                    source={DownArrow}
+                    style={{
+                      position: 'absolute',
+                      left: 30,
+                      top: 15,
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
+          })}
         />
         <Stack.Screen
           name="ConnectScreen"
           component={ConnectScreen}
-          options={{headerShown: false}}
+          options={({navigation}) => ({
+            header: () => (
+              <View>
+                <TouchableOpacity
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+                  onPress={() => {
+                    navigation.goBack();
+                  }}>
+                  <Image
+                    source={DownArrow}
+                    style={{
+                      position: 'absolute',
+                      left: 30,
+                      top: 15,
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
+          })}
         />
         <Stack.Screen
           name="ManageGroup"
           component={ManageGroup}
-          options={{headerShown: false}}
+          options={({navigation}) => ({
+            header: () => (
+              <View>
+                <TouchableOpacity
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+                  onPress={() => {
+                    navigation.goBack();
+                  }}>
+                  <Image
+                    source={DownArrow}
+                    style={{
+                      position: 'absolute',
+                      left: 30,
+                      top: 15,
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
+          })}
           initialParams={null}
         />
         <Stack.Screen
           name="CreateAlarm"
           component={CreateAlarmScreen}
-          options={{headerShown: false}}
+          options={({navigation}) => ({
+            header: () => (
+              <View>
+                <TouchableOpacity
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+                  onPress={() => {
+                    navigation.goBack();
+                  }}>
+                  <Image
+                    source={DownArrow}
+                    style={{
+                      position: 'absolute',
+                      left: 30,
+                      top: 35,
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="AlarmEdit"
+          component={AlarmEdit}
+          options={({navigation}) => ({
+            header: () => (
+              <View>
+                <TouchableOpacity
+                  hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+                  onPress={() => {
+                    navigation.goBack();
+                  }}>
+                  <Image
+                    source={DownArrow}
+                    style={{
+                      position: 'absolute',
+                      left: 30,
+                      top: 35,
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>
