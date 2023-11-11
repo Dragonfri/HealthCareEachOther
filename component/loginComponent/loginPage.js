@@ -33,7 +33,7 @@ export default function LoginPage({navigation}) {
     }
     return value;
     };
-};
+  };
 
   const loginAuth = () => {
     if (id === '' || password === '') {
@@ -50,9 +50,8 @@ export default function LoginPage({navigation}) {
           body: JSON.stringify({'memberId': id, 'password': password}, getCircularReplacer()),
       }).then((response) => response.json())
         .then((data) => {
-            console.log(data);
             if (data.access_token) {
-                navigation.navigate('Main');
+                navigation.navigate('Main', {'access_token': data.access_token, 'member_id': id});
             } else {
                 alert('로그인 정보가 없습니다.');
             }

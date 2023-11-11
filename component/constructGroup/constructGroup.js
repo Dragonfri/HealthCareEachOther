@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
 import {React, useState} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Config from 'react-native-config';
 
 
 import {
@@ -20,8 +21,33 @@ import {
 
 
 export default function ConstructGroup({navigation}) {
+    const route = useRoute();
+    const [access_token, setAccess_token] = useState(route.params.access_token);
+    const [member_id, setMember] = useState(route.params.member_id);
     const [groupName, setGroupName] = useState('');
     const examText = "ex) 우리 가족 운동 알람방";
+
+    const requestGroupCreation = () => {
+        fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/user/group`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${access_token}`,
+            },
+            body: JSON.stringify({'groupName': groupName, 'memberId': member_id}),
+        }).then((response) => response.json())
+          .then((data) => {
+              console.log(data);
+              if (data.groupCode) {
+                  navigation.navigate('Main', {access_token, member_id});
+              } else {
+                  alert('그룹 생성 실패');
+              }
+          })
+          .catch((error) => {
+              console.error("그룹 생성 중 오류 발생:", error);
+          });
+    }
 
     return (
         <View style={styles.container}>
@@ -41,7 +67,7 @@ export default function ConstructGroup({navigation}) {
             </View>
 
             <View style={styles.addGroupBtn}>
-                <TouchableOpacity onPress={() => navigation.navigate('Main')}>
+                <TouchableOpacity onPress={() => requestGroupCreation()}>
                     <Text style={styles.btnText}>그룹 생성</Text>
                 </TouchableOpacity>
             </View>

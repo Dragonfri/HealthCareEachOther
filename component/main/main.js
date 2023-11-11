@@ -1,9 +1,11 @@
 /* eslint-disable prettier/prettier */
-import {React, useState} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {React, useEffect, useState} from 'react';
+import {NavigationContainer, useRoute, useIsFocused} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Logo from '../../assets/images/byVoiceLogo.png';
 import ProfileImg from '../../assets/images/obama.jpg';
+import Config from 'react-native-config';
 
 import {
   Button,
@@ -22,34 +24,61 @@ import Profile from './profile';
 import Group from './group';
 
 export default function Main({navigation}) {
-  const [myself, setMyself] = useState('구성원: 오바마');
-  const groups = [
-    {
-      groupImage: ProfileImg,
-      groupName: '오바마 가족 방',
-      groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...',
-    },
-    {
-      groupImage: ProfileImg,
-      groupName: '바이든 가족 방',
-      groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...',
-    },
-    {
-      groupImage: ProfileImg,
-      groupName: '트럼프 가족 방',
-      groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...',
-    },
-    {
-      groupImage: ProfileImg,
-      groupName: '문재인 가족 방',
-      groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...',
-    },
-    {
-      groupImage: ProfileImg,
-      groupName: '윤석열 가족 방',
-      groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...',
-    },
-  ];
+  const route = useRoute();
+  const isFocused = useIsFocused();
+  const [access_token, setAccess_token] = useState(route.params.access_token);
+  const [myself, setMyself] = useState(route.params.member_id);
+  // 닉네임을 가져오는 부분 추가
+  const [groups, setGroups] = useState([]);
+
+  const getAllGroups = () => {
+    fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/user/group/${myself}`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+  }).then((response) => response.json())
+    .then((data) => {
+        if (data) {
+          setGroups(data);
+        }
+    })
+    .catch((error) => {
+        console.error('로그인 요청 중 오류 발생:', error);
+    });
+  };
+
+  useEffect(() => {
+    getAllGroups();
+  }, [isFocused]);
+
+  // const groups = [
+  //   {
+  //     groupImage: ProfileImg,
+  //     groupName: '오바마 가족 방',
+  //     groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...',
+  //   },
+  //   {
+  //     groupImage: ProfileImg,
+  //     groupName: '바이든 가족 방',
+  //     groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...',
+  //   },
+  //   {
+  //     groupImage: ProfileImg,
+  //     groupName: '트럼프 가족 방',
+  //     groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...',
+  //   },
+  //   {
+  //     groupImage: ProfileImg,
+  //     groupName: '문재인 가족 방',
+  //     groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...',
+  //   },
+  //   {
+  //     groupImage: ProfileImg,
+  //     groupName: '윤석열 가족 방',
+  //     groupElement: '구성원: 오바마,트럼프,바이든,힐러리,문재인,윤석열...',
+  //   },
+  // ];
 
   const onPressGroup = groupInfo => {
     // teamMaker 누구인지 연동
@@ -80,9 +109,10 @@ export default function Main({navigation}) {
               activeOpacity={0.8}>
               <View>
                 <Group
-                  groupImage={group.groupImage}
+                  groupImage={ProfileImg}
                   groupName={group.groupName}
-                  groupElement={group.groupElement}
+                  groupElement={group.members}
+                  groupCode={group.groupCode}
                 />
               </View>
             </TouchableOpacity>
@@ -91,7 +121,7 @@ export default function Main({navigation}) {
       </View>
 
       <View style={styles.addGroupBtn}>
-        <TouchableOpacity onPress={() => navigation.navigate('ConnectScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('ConnectScreen', {access_token, member: myself})}>
           <Text style={styles.btnText}>그룹 추가</Text>
         </TouchableOpacity>
       </View>
