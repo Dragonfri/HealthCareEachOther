@@ -22,8 +22,18 @@ export default function LoginPage({navigation}) {
   const [password, setPassword] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
 
-  console.log(Config.REACT_APP_IP_ADDRESS);
-
+  const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) {
+            return;
+        }
+        seen.add(value);
+    }
+    return value;
+    };
+};
 
   const loginAuth = () => {
     if (id === '' || password === '') {
@@ -32,14 +42,15 @@ export default function LoginPage({navigation}) {
     }
 
     // ip address hiding
-    fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/login`, {
+    fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/login`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ 'memberId': id, 'password': password }),
+          body: JSON.stringify({'memberId': id, 'password': password}, getCircularReplacer()),
       }).then((response) => response.json())
         .then((data) => {
+            console.log(data);
             if (data.access_token) {
                 navigation.navigate('Main');
             } else {
@@ -68,7 +79,7 @@ export default function LoginPage({navigation}) {
           placeholder="비밀번호 입력"
           placeholderTextColor="gray"
           value={password}
-          onChange={setPassword}
+          onChangeText={setPassword}
         />
         <View style={styles.BtnContainer}>
           <TouchableOpacity>
