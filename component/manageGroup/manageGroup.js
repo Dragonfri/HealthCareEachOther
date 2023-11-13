@@ -2,6 +2,7 @@
 import {React, useState, useEffect} from 'react';
 import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 import {
   ScrollView,
@@ -69,8 +70,6 @@ export default function ManageGroup({navigation}) {
   const groupInfo = route.params.groupInfo;
   // 사용자 자기 자신
   const self = route.params.self;
-  // 그룹원 이름 리스트
-  const groupElement = groupInfo.groupElement.split(',');
   const [selected, setSelected] = useState(route.params.self);
   // 현재 리스트뷰에 보여줄 alarm list
   const [alarms, setAlarms] = useState([]);
@@ -87,9 +86,19 @@ export default function ManageGroup({navigation}) {
     timestamp: 0,
     year: today.getFullYear(),
   });
+  
+  const onCopyGroupCode = async () => {
+    try {
+      Clipboard.setString(groupInfo.groupCode);
+    } catch (e) {
+      // eslint-disable-next-line no-alert
+      alert('복사에 실패했습니다.');
+    }
+  };
 
   const getInviteCode = () => {
     // to-do fetch 그룹 코드 & 클립보드 복사
+    onCopyGroupCode();
     ToastAndroid.show(
       '초대 코드가 클립보드에 복사되었습니다.',
       ToastAndroid.SHORT,
@@ -130,7 +139,7 @@ export default function ManageGroup({navigation}) {
         <ScrollView
           horizontal={true}
           contentContainerStyle={styles.scrollStyle}>
-          {groupElement.map((element, index) => (
+          {groupInfo.members.map((element, index) => (
             <TouchableOpacity
               key={index}
               onPress={() => onPressElement(element)}

@@ -56,11 +56,6 @@ function App() {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Main"
-          component={Main}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
           name="Register"
           component={RegisterPage}
           options={({navigation}) => ({
@@ -111,6 +106,11 @@ function App() {
               </View>
             ),
           })}
+        />
+        <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="ConnectScreen"

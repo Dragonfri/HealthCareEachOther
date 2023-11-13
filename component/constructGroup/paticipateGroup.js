@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
 import {React, useState} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Config from 'react-native-config';
 
 
 import {
@@ -19,8 +20,31 @@ import {
   } from 'react-native';
 
 
-export default function ConstructGroup({navigation}) {
+export default function ParticipateGroup({navigation}) {
     const [groupCode, setGroupCode] = useState('');
+    const route = useRoute();
+    const member_id = route.params.member_id;
+    const access_token = route.params.access_token;
+
+    const participateGroup = () => {
+
+        fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/user/group/join`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({'groupCode': groupCode, 'memberId': member_id}),
+        }).then((data) => {
+              if (data) {
+                  navigation.navigate('Main', {access_token, member: member_id});
+              } else {
+                  alert('그룹 정보가 없습니다.');
+              }
+          })
+          .catch((error) => {
+              console.error("그룹 참여 중 오류 발생:", error);
+          });
+    }
 
     return (
         <View style={styles.container}>
@@ -39,7 +63,7 @@ export default function ConstructGroup({navigation}) {
             </View>
 
             <View style={styles.addGroupBtn}>
-                <TouchableOpacity onPress={() => navigation.navigate('Main')}>
+                <TouchableOpacity onPress={() => participateGroup()}>
                     <Text style={styles.btnText}>그룹 참여</Text>
                 </TouchableOpacity>
             </View>
