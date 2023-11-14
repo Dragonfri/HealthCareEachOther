@@ -86,7 +86,7 @@ export default function ManageGroup({navigation}) {
     timestamp: 0,
     year: today.getFullYear(),
   });
-  
+
   const onCopyGroupCode = async () => {
     try {
       Clipboard.setString(groupInfo.groupCode);
@@ -199,7 +199,8 @@ export default function ManageGroup({navigation}) {
       </View>
 
       <View style={styles.addGroupBtn}>
-        <TouchableOpacity onPress={() => navigation.navigate('CreateAlarm')}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('CreateAlarm')}> */}
+        <TouchableOpacity onPress={() => navigation.navigate('AlarmPage')}>
           <Text style={styles.btnText}>알람 추가</Text>
         </TouchableOpacity>
       </View>

@@ -8,6 +8,8 @@ const RetryImage = require('../../assets/images/retry.png');
 const MikeImage = require('../../assets/images/mike.png');
 const PlayImage = require('../../assets/images/play.png');
 
+
+
 import TimeModal from './timeModal';
 
 import {
@@ -128,8 +130,9 @@ export default function CreateAlarmScreen({navigation}) {
     return null; // 둘 중 하나라도 없으면 아무것도 표시하지 않음
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // 필요한 로직을 여기에 추가...
+
 
     // 이전 페이지로 돌아가기
     navigation.goBack();
