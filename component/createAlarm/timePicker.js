@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, {useState} from 'react';
 import {
   View,
@@ -9,6 +10,7 @@ import {
 
 const ITEM_HEIGHT = 50; // 한 번에 하나의 아이템을 보여주기 위한 아이템 높이
 
+// eslint-disable-next-line no-undef
 export default TimeSelector = ({onTimeSelected}) => {
   const [selectedHours, setSelectedHours] = useState('00');
   const [selectedMinutes, setSelectedMinutes] = useState('00');

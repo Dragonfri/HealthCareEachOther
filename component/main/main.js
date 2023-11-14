@@ -50,6 +50,7 @@ export default function Main({navigation}) {
 
   useEffect(() => {
     getAllGroups();
+    console.log(groups);
   }, [isFocused]);
 
   // const groups = [
