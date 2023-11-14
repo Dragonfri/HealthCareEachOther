@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {React, useState} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 const ClockImage = require('../../assets/images/clock.png');
@@ -9,7 +9,7 @@ const MikeImage = require('../../assets/images/mike.png');
 const PlayImage = require('../../assets/images/play.png');
 
 import TimeModal from './timeModal';
-
+import Config from 'react-native-config';
 import {
   Button,
   SafeAreaView,
@@ -28,6 +28,7 @@ import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 import AudioRecord from 'react-native-audio-record';
 import Sound from 'react-native-sound';
+import RNFS from 'react-native-fs';
 
 export default function CreateAlarmScreen({navigation}) {
   //녹음 시작
@@ -83,7 +84,6 @@ export default function CreateAlarmScreen({navigation}) {
   };
 
   const playRecording = () => {
-    console.log(recordedFile);
     if (recordedFile) {
       const sound = new Sound(recordedFile, '', error => {
         if (error) {
@@ -95,7 +95,7 @@ export default function CreateAlarmScreen({navigation}) {
     }
   };
 
-  //녹음끝
+   //녹음끝
 
   // 모달의 활성화 상태를 관리하는 state
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -103,12 +103,31 @@ export default function CreateAlarmScreen({navigation}) {
   // 선택된 요일과 시간을 저장하는 state
   const [selectedDays, setSelectedDays] = useState([]);
   const [selectedTime, setSelectedTime] = useState('');
+  const [alarmName, setAlarmName] = useState('');
+
+  const route = useRoute();
+  const groupInfo = route.params.groupInfo;
+  const selectedMember = route.params.selected;
 
   // TimeModal에서 설정을 완료하고 전달된 정보를 받을 콜백 함수
   const handleTimeSelection = (days, time) => {
     setSelectedDays(days);
     setSelectedTime(time);
     setIsModalVisible(false); // 모달 비활성화
+  };
+
+  const convertDaysToEng = () => {
+    const dayMap = {
+      '월': 'MON',
+      '화': 'TUE',
+      '수': 'WED',
+      '목': 'THU',
+      '금': 'FRI',
+      '토': 'SAT',
+      '일': 'SUN',
+    };
+  
+    return selectedDays.map(day => dayMap[day]);
   };
 
   // selectedDays와 selectedTime이 둘 다 있을 때만 SelectedDateTime을 표시하는 함수
@@ -128,8 +147,47 @@ export default function CreateAlarmScreen({navigation}) {
     return null; // 둘 중 하나라도 없으면 아무것도 표시하지 않음
   };
 
-  const handleSubmit = () => {
+  const convertUriToFile = async (uri) => {
+    try {
+      const fileObject = {
+        uri: `file://${uri}`,
+        type: 'audio/wav', // 파일 유형에 맞게 수정
+        name: 'recording.wav', // 파일 이름에 맞게 수정
+      };
+
+      return fileObject;
+    } catch (error) {
+      console.error('파일 정보를 가져오는 중 오류:', error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async () => {
     // 필요한 로직을 여기에 추가...
+    try {
+      const fileObject = await convertUriToFile(recordedFile);
+
+      const formData = new FormData();
+
+      formData.append('alarmName', alarmName);
+      formData.append('days', convertDaysToEng());
+      formData.append('groupId', groupInfo.groupCode);
+      formData.append('memberId', selectedMember);
+      formData.append('time', `${selectedTime}:00`);
+      formData.append('voice', fileObject);
+
+      const response = await fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/user/alarm`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        body: formData,
+      });
+
+    } catch (error) {
+      console.error('파일 업로드 중 오류:', error);
+      // 오류 발생 시 수행할 로직 추가
+    }
 
     // 이전 페이지로 돌아가기
     navigation.goBack();
@@ -154,6 +212,8 @@ export default function CreateAlarmScreen({navigation}) {
             style={styles.PlanTextInput}
             placeholder="상대에게 보여줄 알람의 이름"
             placeholderTextColor="gray"
+            value={alarmName}
+            onChangeText={setAlarmName}
           />
           <Text style={styles.PlanText}>계획 시간을 설정해주세요</Text>
           <View style={styles.OtherInputContainer}>
