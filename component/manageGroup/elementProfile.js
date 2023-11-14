@@ -96,6 +96,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     right: -1,
     top: -4,
+    borderWidth: 1,
+    borderColor: 'black',
   },
   mySelfText: {
     color: 'white',

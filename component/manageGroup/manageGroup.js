@@ -199,8 +199,8 @@ export default function ManageGroup({navigation}) {
       </View>
 
       <View style={styles.addGroupBtn}>
-        {/* <TouchableOpacity onPress={() => navigation.navigate('CreateAlarm')}> */}
-        <TouchableOpacity onPress={() => navigation.navigate('AlarmPage')}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate('AlarmPage')}> */}
+        <TouchableOpacity onPress={() => navigation.navigate('CreateAlarm')}>
           <Text style={styles.btnText}>알람 추가</Text>
         </TouchableOpacity>
       </View>
