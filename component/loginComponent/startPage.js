@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
-import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import {NavigationContainer, useIsFocused} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {
@@ -14,8 +15,64 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Config from 'react-native-config';
 
 export default function StartPage({navigation}) {
+
+  const isFocused = useIsFocused();
+
+  const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) {
+            return;
+        }
+        seen.add(value);
+    }
+    return value;
+    };
+  };
+
+  const userLogin = (userData) => {
+
+    console.log("login hi");
+
+    fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/login`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({'memberId': userData.userId, 'password': userData.userPw}, getCircularReplacer()),
+      }).then((response) => response.json())
+        .then((data) => {
+            if (data.access_token) {
+                console.log(data.access_token);
+                navigation.navigate('Main', {'access_token': data.access_token, 'member_id': userData.userId});
+            } else {
+                alert('로그인 정보가 없습니다.');
+            }
+        })
+        .catch((error) => {
+            console.error("로그인 요청 중 오류 발생:", error);
+        });
+  };
+
+  const fetchUserData = async () => {
+    const userDataString =  await AsyncStorage.getItem('userData');
+    const userData = JSON.parse(userDataString);
+
+    if (userData === null) {
+      return;
+    }
+    userLogin(userData);
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [isFocused]);
+
   return (
     <View style={styles.container}>
       <View style={styles.mainContainer}>
