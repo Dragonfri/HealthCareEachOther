@@ -2,6 +2,8 @@
 import {React, useState, useEffect} from 'react';
 import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Config from 'react-native-config';
+
 
 import {
   Button,
@@ -18,6 +20,20 @@ import {
   ToastAndroid,
 } from 'react-native';
 
+const requestComplete = async (alarmId) => {
+  try {
+    const response = await fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/user/alarm/success/${alarmId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+  } catch (error) {
+    console.error("알람 데이터 갱신 중 오류 발생:", error);
+  }
+}
+
 const IncompletePlan = ({time}) => {
   return (
     <View style={styles.incompleteContainer}>
@@ -29,11 +45,11 @@ const IncompletePlan = ({time}) => {
   );
 };
 
-const Delayed = ({time, owner, setContainerState}) => {
+const Delayed = ({time, owner, setContainerState, alarmId}) => {
   return (
     <View>
       {owner ? (
-        <DelayedOwner time={time} setContainerState={setContainerState} />
+        <DelayedOwner time={time} setContainerState={setContainerState} alarmId={alarmId} />
       ) : (
         <DelayedNotOwner time={time} />
       )}
@@ -51,13 +67,14 @@ const DelayedNotOwner = ({time}) => {
   );
 };
 
-const DelayedOwner = ({time, setContainerState}) => {
+const DelayedOwner = ({time, setContainerState, alarmId}) => {
   return (
     <View style={styles.delayedPlanContainer}>
       <View>
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
+            requestComplete(alarmId);
             setContainerState(true);
           }}>
           <View style={styles.delayedPlanBtn}>
@@ -83,6 +100,7 @@ const CompletePlan = ({setContainerState}) => {
 };
 
 export default function AlarmContainer({
+  alarmId,
   alarmName,
   alarmTime,
   alarmState,
@@ -161,6 +179,7 @@ export default function AlarmContainer({
             time={alarmTime}
             owner={owner}
             setContainerState={setContainerState}
+            alarmId={alarmId}
           />
           }
         </View>
