@@ -1,3 +1,6 @@
+/* eslint-disable no-dupe-keys */
+/* eslint-disable react/jsx-no-undef */
+/* eslint-disable prettier/prettier */
 import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import TimePicker from './timePicker';
