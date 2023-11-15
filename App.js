@@ -41,7 +41,7 @@ import ConnectScreen from './component/constructGroup/connectScreen';
 import ManageGroup from './component/manageGroup/manageGroup';
 import CreateAlarmScreen from './component/createAlarm/createAlarmScreen';
 import AlarmEdit from './component/alramEdit/alarmEdit';
-
+import AlarmPage from './component/createAlarm/alarmPage';
 import DownArrow from './assets/images/back.png';
 
 const Stack = createNativeStackNavigator();
@@ -216,6 +216,12 @@ function App() {
               </View>
             ),
           })}
+        />
+
+        <Stack.Screen
+          name="AlarmPage"
+          component={AlarmPage}
+          options={{headerShown: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>

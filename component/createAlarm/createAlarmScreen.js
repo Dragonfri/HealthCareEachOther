@@ -8,6 +8,8 @@ const RetryImage = require('../../assets/images/retry.png');
 const MikeImage = require('../../assets/images/mike.png');
 const PlayImage = require('../../assets/images/play.png');
 
+
+
 import TimeModal from './timeModal';
 import Config from 'react-native-config';
 import {
@@ -147,6 +149,7 @@ export default function CreateAlarmScreen({navigation}) {
     return null; // 둘 중 하나라도 없으면 아무것도 표시하지 않음
   };
 
+
   const convertUriToFile = async (uri) => {
     try {
       const fileObject = {
@@ -188,6 +191,7 @@ export default function CreateAlarmScreen({navigation}) {
       console.error('파일 업로드 중 오류:', error);
       // 오류 발생 시 수행할 로직 추가
     }
+
 
     // 이전 페이지로 돌아가기
     navigation.goBack();
