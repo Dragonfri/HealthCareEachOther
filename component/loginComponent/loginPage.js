@@ -2,6 +2,8 @@
 import {React, useState } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Config from 'react-native-config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   Button,
@@ -19,19 +21,54 @@ import {
 export default function LoginPage({navigation}) {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const [isEmpty, setIsEmpty] = useState(false);
+
+  const getCircularReplacer = () => {
+    const seen = new WeakSet();
+    return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) {
+            return;
+        }
+        seen.add(value);
+    }
+    return value;
+    };
+  };
+
+  const saveUserData = async (_id, pw, token) => {
+    await AsyncStorage.setItem(
+      'userData',
+      JSON.stringify({
+        'token': token,
+        'userId': _id,
+        'userPw': pw,
+      })
+    );
+
+    const userDataString = await AsyncStorage.getItem('userData');
+    const userData = JSON.parse(userDataString);
+    console.log(userData);
+  };
 
   const loginAuth = () => {
+    if (id === '' || password === '') {
+      setIsEmpty(true);
+      return;
+    }
+
     // ip address hiding
-    fetch("ip/api/login", {
+    fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/login`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ 'memberId': id, 'password': password }),
+          body: JSON.stringify({'memberId': id, 'password': password}, getCircularReplacer()),
       }).then((response) => response.json())
         .then((data) => {
             if (data.access_token) {
-                navigation.navigate('Main');
+                saveUserData(id, password, data.access_token);
+                navigation.navigate('Main', {'access_token': data.access_token, 'member_id': id});
             } else {
                 alert('로그인 정보가 없습니다.');
             }
@@ -58,7 +95,7 @@ export default function LoginPage({navigation}) {
           placeholder="비밀번호 입력"
           placeholderTextColor="gray"
           value={password}
-          onChange={setPassword}
+          onChangeText={setPassword}
         />
         <View style={styles.BtnContainer}>
           <TouchableOpacity>
@@ -72,6 +109,7 @@ export default function LoginPage({navigation}) {
           </TouchableOpacity>
         </View>
       </View>
+      <View>{isEmpty ? <Text style={styles.errorText}>id, password 모두 입력해주세요.</Text> : <></>}</View>
       <View style={styles.SignInBtn}>
         <TouchableOpacity onPress={loginAuth}>
           <Text style={styles.SignInBtnText}>로그인</Text>
@@ -157,5 +195,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textDecorationLine: 'underline',
     marginLeft: '40%',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 15,
+    fontWeight: '600',
   },
 });

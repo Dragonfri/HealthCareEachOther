@@ -18,14 +18,14 @@ import {
     Image,
   } from 'react-native';
 
-export default function Group({ groupImage, groupName, groupElement }) {
+export default function Group({groupName, groupElement, groupCode}) {
     return (
         <View style={styles.groupTopContainer}>
             <View style={styles.groupContainer}>
-                <View><Image source={groupImage} style={styles.groupImg} /></View>
+                <View><Image source={ProfileImg} style={styles.groupImg} /></View>
                 <View style={styles.groupTextView}>
                     <View><Text style={styles.groupName}>{groupName}</Text></View>
-                    <View><Text style={styles.groupElement}>{groupElement}</Text></View>
+                    <View><Text style={styles.groupElement}>{`구성원: ${groupElement}`}</Text></View>
                 </View>
             </View>
         </View>

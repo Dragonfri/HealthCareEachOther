@@ -1,7 +1,9 @@
 /* eslint-disable prettier/prettier */
 import {React, useState, useEffect} from 'react';
-import {NavigationContainer, useRoute} from '@react-navigation/native';
+import {NavigationContainer, useRoute, useIsFocused} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Clipboard from '@react-native-clipboard/clipboard';
+import Config from 'react-native-config';
 
 import {
   ScrollView,
@@ -21,56 +23,13 @@ import DownArrow from '../../assets/images/down-arrow.png';
 
 export default function ManageGroup({navigation}) {
   // 날짜 별로 가지고 온 계획 목록들
-  const plans = [
-    {
-      name: '구성원: 오바마',
-      plan: [
-        {
-          alarmName: '밥 잘 챙겨먹기',
-          alarmTime: '06:00',
-          alarmState: '계획 진행중',
-        },
-      ],
-    },
-    {
-      name: '트럼프',
-      plan: [
-        {
-          alarmName: '고혈압 약 먹기',
-          alarmTime: '07:30',
-          alarmState: '계획 진행중',
-        },
-        {alarmName: '혈압 재기', alarmTime: '08:00', alarmState: '미완료'},
-      ],
-    },
-    {
-      name: '바이든',
-      plan: [
-        {alarmName: '고혈압 약 먹기', alarmTime: '09:00', alarmState: '미완료'},
-      ],
-    },
-    {
-      name: '힐러리',
-      plan: [
-        {alarmName: '비타민 먹기', alarmTime: '12:00', alarmState: '완료'},
-        {
-          alarmName: '마그네슘 먹기',
-          alarmTime: '13:30',
-          alarmState: '사진 추가',
-        },
-      ],
-    },
-    {name: '문재인', plan: []},
-    {name: '윤석열...', plan: []},
-  ];
-
+ 
+  const isFocused = useIsFocused();
   const today = new Date();
   const route = useRoute();
   const groupInfo = route.params.groupInfo;
   // 사용자 자기 자신
   const self = route.params.self;
-  // 그룹원 이름 리스트
-  const groupElement = groupInfo.groupElement.split(',');
   const [selected, setSelected] = useState(route.params.self);
   // 현재 리스트뷰에 보여줄 alarm list
   const [alarms, setAlarms] = useState([]);
@@ -88,8 +47,18 @@ export default function ManageGroup({navigation}) {
     year: today.getFullYear(),
   });
 
+  const onCopyGroupCode = async () => {
+    try {
+      Clipboard.setString(groupInfo.groupCode);
+    } catch (e) {
+      // eslint-disable-next-line no-alert
+      alert('복사에 실패했습니다.');
+    }
+  };
+
   const getInviteCode = () => {
     // to-do fetch 그룹 코드 & 클립보드 복사
+    onCopyGroupCode();
     ToastAndroid.show(
       '초대 코드가 클립보드에 복사되었습니다.',
       ToastAndroid.SHORT,
@@ -104,14 +73,64 @@ export default function ManageGroup({navigation}) {
     setAlarms([]);
   };
 
+  const cutSeconds = (arr) => {
+    for (var i = 0; i < arr.length; i++) {
+      arr[i].time = arr[i].time.substr(0, 5);
+    }
+
+    arr.sort(compareTime);
+    return arr;
+  };
+
+  const compareTime = (a, b) => {
+    let t1 = a.time.replace(':', '');
+    let t2 = b.time.replace(':', '');
+    var timeA = parseInt(t1, 10);
+    var timeB = parseInt(t2, 10);
+
+    if (timeA < timeB) {
+      return -1;
+    }
+    if (timeA > timeB) {
+      return 1;
+    }
+    return 0;
+  };
+
+  const getDayOfWeek = (dateString) => {
+    const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    const date = new Date(dateString);
+    const dayOfWeek = date.getDay(); // 0(일요일)부터 6(토요일)까지의 값 반환
+    return daysOfWeek[dayOfWeek];
+  };
+
+  const renewAlarms = async () => {
+    const alarmInfo = {
+      'day': getDayOfWeek(date.dateString),
+      'groupId': groupInfo.groupCode,
+      'memberId': selected,
+    };
+
+    try {
+      const response = await fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/user/alarm/list`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(alarmInfo),
+      });
+      let responseData = await response.json();
+      responseData = cutSeconds(responseData);
+
+      setAlarms(responseData);
+    } catch (error) {
+      console.error("알람 데이터 갱신 중 오류 발생:", error);
+    }
+  };
   useEffect(() => {
-    plans.forEach(member => {
-      if (member.name === selected) {
-        setAlarms(member.plan);
-      }
-    });
+    renewAlarms();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected]);
+  }, [selected, isFocused, date]);
 
   return (
     <View style={styles.container}>
@@ -122,7 +141,7 @@ export default function ManageGroup({navigation}) {
         </View>
         <TouchableOpacity onPress={() => getInviteCode()}>
           <View style={styles.copyCodeWrap}>
-            <Text>초대 코드 복사</Text>
+            <Text style={styles.inviteText}>초대 코드 복사</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -130,7 +149,7 @@ export default function ManageGroup({navigation}) {
         <ScrollView
           horizontal={true}
           contentContainerStyle={styles.scrollStyle}>
-          {groupElement.map((element, index) => (
+          {groupInfo.members.map((element, index) => (
             <TouchableOpacity
               key={index}
               onPress={() => onPressElement(element)}
@@ -174,13 +193,15 @@ export default function ManageGroup({navigation}) {
           {alarms.map((alarm, index) => (
             <TouchableOpacity
               key={index}
-              onPress={() => {}}
+              onPress={() => navigation.navigate('AlarmEdit')}
               activeOpacity={0.8}>
               <View style={styles.planContainer}>
                 <AlarmContainer
+                  alarmId={alarm.alarmId}
                   alarmName={alarm.alarmName}
-                  alarmTime={alarm.alarmTime}
-                  alarmState={alarm.alarmState}
+                  alarmTime={alarm.time}
+                  alarmState={alarm.status}
+                  alarmDate={date}
                   owner={self === selected}
                 />
               </View>
@@ -190,7 +211,8 @@ export default function ManageGroup({navigation}) {
       </View>
 
       <View style={styles.addGroupBtn}>
-        <TouchableOpacity onPress={() => navigation.navigate('CreateAlarm')}>
+
+        <TouchableOpacity onPress={() => navigation.navigate('CreateAlarm', {groupInfo, selected})}>
           <Text style={styles.btnText}>알람 추가</Text>
         </TouchableOpacity>
       </View>
@@ -294,6 +316,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#3AD277',
     fontSize: 18,
+    fontWeight: '500',
+  },
+  inviteText: {
+    color: 'white',
     fontWeight: '500',
   },
 });

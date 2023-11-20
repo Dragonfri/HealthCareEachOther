@@ -2,6 +2,8 @@
 import {React, useState, useEffect} from 'react';
 import {NavigationContainer, useRoute} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Config from 'react-native-config';
+
 
 import {
   Button,
@@ -18,8 +20,21 @@ import {
   ToastAndroid,
 } from 'react-native';
 
+const requestComplete = async (alarmId) => {
+  try {
+    const response = await fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/user/alarm/success/${alarmId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+  } catch (error) {
+    console.error("알람 데이터 갱신 중 오류 발생:", error);
+  }
+}
+
 const IncompletePlan = ({time}) => {
-  console.log('미완료에요');
   return (
     <View style={styles.incompleteContainer}>
       {/* 실제 시간 계산 */}
@@ -30,11 +45,11 @@ const IncompletePlan = ({time}) => {
   );
 };
 
-const Delayed = ({time, owner, setContainerState}) => {
+const Delayed = ({time, owner, setContainerState, alarmId}) => {
   return (
     <View>
       {owner ? (
-        <DelayedOwner time={time} setContainerState={setContainerState} />
+        <DelayedOwner time={time} setContainerState={setContainerState} alarmId={alarmId} />
       ) : (
         <DelayedNotOwner time={time} />
       )}
@@ -52,14 +67,15 @@ const DelayedNotOwner = ({time}) => {
   );
 };
 
-const DelayedOwner = ({time, setContainerState}) => {
+const DelayedOwner = ({time, setContainerState, alarmId}) => {
   return (
     <View style={styles.delayedPlanContainer}>
       <View>
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
-            setContainerState('완료');
+            requestComplete(alarmId);
+            setContainerState(true);
           }}>
           <View style={styles.delayedPlanBtn}>
             <Text style={styles.delayedPlanBtnText}>완료 하기</Text>
@@ -84,12 +100,62 @@ const CompletePlan = ({setContainerState}) => {
 };
 
 export default function AlarmContainer({
+  alarmId,
   alarmName,
   alarmTime,
   alarmState,
+  alarmDate,
   owner,
 }) {
   const [containerState, setContainerState] = useState(alarmState);
+
+
+  const getCurrentDate = () => {
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더하고 두 자리로 만듭니다.
+    let currentDay = currentDate.getDate().toString().padStart(2, '0');
+
+    let formattedDate = currentYear + '-' + currentMonth + '-' + currentDay;
+
+    return formattedDate;
+  };
+
+  const isTime = () => {
+    let currentDate = new Date();
+    let currentHour = currentDate.getHours().toString().padStart(2, '0');
+    let currentMinute = currentDate.getMinutes().toString().padStart(2, '0');
+
+    let currentTime = currentHour + ':' + currentMinute;
+
+    return timeCompare(currentTime, alarmTime);
+  };
+
+  const timeCompare = (a, b) => {
+    let t1 = a.replace(':', '');
+    let t2 = b.replace(':', '');
+    var timeA = parseInt(t1, 10);
+    var timeB = parseInt(t2, 10);
+
+
+    if (timeA < timeB) {
+      return false;
+    }
+    if (timeA >= timeB) {
+      return true;
+    }
+  };
+
+  const determineState = (date1, date2) => {
+    var timestamp1 = new Date(date1).getTime();
+    var timestamp2 = new Date(date2).getTime();
+
+    if (timestamp1 === timestamp2) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   return (
     <View style={styles.alarmTopContainer}>
@@ -103,19 +169,19 @@ export default function AlarmContainer({
           </View>
         </View>
         <View>
-          {containerState === '미완료' ? (
-            <IncompletePlan time={alarmTime} />
-          ) : containerState === '계획 진행중' ? (
-            <Delayed
-              time={alarmTime}
-              owner={owner}
-              setContainerState={setContainerState}
-            />
-          ) : containerState === '완료' ? (
-            <CompletePlan setContainerState={setContainerState} />
-          ) : (
-            <></>
-          )}
+          {!determineState(getCurrentDate(), alarmDate.dateString) ?
+            <IncompletePlan time={alarmTime} /> : !isTime() ? <IncompletePlan time={alarmTime} /> :
+          alarmState ?
+          <CompletePlan setContainerState={setContainerState} /> :
+          containerState ?
+          <CompletePlan setContainerState={setContainerState} /> :
+          <Delayed
+            time={alarmTime}
+            owner={owner}
+            setContainerState={setContainerState}
+            alarmId={alarmId}
+          />
+          }
         </View>
       </View>
     </View>
