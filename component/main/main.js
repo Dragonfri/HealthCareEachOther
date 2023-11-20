@@ -6,6 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Logo from '../../assets/images/byVoiceLogo.png';
 import ProfileImg from '../../assets/images/obama.jpg';
 import Config from 'react-native-config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   Button,
@@ -31,6 +32,11 @@ export default function Main({navigation}) {
   // 닉네임을 가져오는 부분 추가
   const [groups, setGroups] = useState([]);
 
+  const userLogout = async () => {
+    await AsyncStorage.removeItem('userData');
+    navigation.navigate('Start');
+  };
+
   const getAllGroups = () => {
     fetch(`${Config.REACT_APP_IP_ADDRESS}:8080/api/mvp/user/group/${myself}`, {
       method: 'GET',
@@ -50,7 +56,6 @@ export default function Main({navigation}) {
 
   useEffect(() => {
     getAllGroups();
-    console.log(groups);
   }, [isFocused]);
 
   // const groups = [
@@ -89,7 +94,11 @@ export default function Main({navigation}) {
   return (
     <View style={styles.top}>
       <View style={styles.header}>
-        <View style={{width: 70}} />
+        <View style={styles.logoutContainer}>
+          <TouchableOpacity onPress={() => userLogout()}>
+            <View style={styles.logoutBtn}><Text style={styles.logoutText}>로그아웃</Text></View>
+          </TouchableOpacity>
+        </View>
         <View style={styles.logoContainer}>
           <Image
             // image source는 나중에 꼭 변환!
@@ -187,4 +196,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 200,
   },
+  logoutContainer: {
+    width: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoutBtn: {
+    backgroundColor: '#3AD277',
+    padding: 8,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoutText: {
+    color: '#DFF9F0',
+    fontSize: 12,
+    fontWeight: '600',
+  }
 });

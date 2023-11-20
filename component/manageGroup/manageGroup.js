@@ -197,6 +197,7 @@ export default function ManageGroup({navigation}) {
               activeOpacity={0.8}>
               <View style={styles.planContainer}>
                 <AlarmContainer
+                  alarmId={alarm.alarmId}
                   alarmName={alarm.alarmName}
                   alarmTime={alarm.time}
                   alarmState={alarm.status}

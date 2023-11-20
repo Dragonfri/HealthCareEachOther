@@ -3,6 +3,7 @@ import {React, useState } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Config from 'react-native-config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   Button,
@@ -35,6 +36,21 @@ export default function LoginPage({navigation}) {
     };
   };
 
+  const saveUserData = async (_id, pw, token) => {
+    await AsyncStorage.setItem(
+      'userData',
+      JSON.stringify({
+        'token': token,
+        'userId': _id,
+        'userPw': pw,
+      })
+    );
+
+    const userDataString = await AsyncStorage.getItem('userData');
+    const userData = JSON.parse(userDataString);
+    console.log(userData);
+  };
+
   const loginAuth = () => {
     if (id === '' || password === '') {
       setIsEmpty(true);
@@ -51,6 +67,7 @@ export default function LoginPage({navigation}) {
       }).then((response) => response.json())
         .then((data) => {
             if (data.access_token) {
+                saveUserData(id, password, data.access_token);
                 navigation.navigate('Main', {'access_token': data.access_token, 'member_id': id});
             } else {
                 alert('로그인 정보가 없습니다.');
